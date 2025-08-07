@@ -29,6 +29,32 @@ namespace AplikasiWarga.GUI
             // throw new NotImplementedException();
         }
 
+        private bool IsFormValid()
+        {
+            if (cmbWarga.SelectedItem == null)
+            {
+                MessageBox.Show("Pilih NIK/Nama Warga.", "Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(txtJumlah.Text))
+            {
+                MessageBox.Show("Jumlah Iuran harus diisi.", "Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            int jumlahIuran;
+            if (!int.TryParse(txtJumlah.Text, out jumlahIuran) || jumlahIuran <= 0)
+            {
+                MessageBox.Show("Jumlah Iuran harus berupa angka positif.", "Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            if (dtpTanggalIuran.Value.Date > DateTime.Now.Date)
+            {
+                MessageBox.Show("Tanggal Iuran tidak boleh di masa depan.", "Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            // Keterangan boleh kosong, tidak perlu validasi
+            return true;
+        }
         private void BuildUI()
         {
             // Konfigurasi Form
@@ -156,6 +182,10 @@ namespace AplikasiWarga.GUI
         }
         private void btnSimpan_Click(object sender, EventArgs e)
         {
+            if (!IsFormValid())
+            {
+                return; 
+            }
             if (cmbWarga.SelectedItem == null || string.IsNullOrWhiteSpace(txtJumlah.Text))
             {
                 MessageBox.Show("NIK/Nama Warga dan Jumlah Iuran harus diisi.", "Peringatan",

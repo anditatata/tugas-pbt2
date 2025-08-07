@@ -156,8 +156,32 @@ namespace AplikasiWarga.GUI
             btnUbah.Enabled = false;
             btnHapus.Enabled = false;
         }
+        private bool IsFormValid()
+        {
+            if (cmbWarga.SelectedItem == null)
+            {
+                MessageBox.Show("Pilih NIK/Nama Warga.", "Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(txtNamaKegiatan.Text))
+            {
+                MessageBox.Show("Nama Kegiatan harus diisi.", "Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            if (dtpTanggalKegiatan.Value.Date > DateTime.Now.Date)
+            {
+                MessageBox.Show("Tanggal Kegiatan tidak boleh di masa depan.", "Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            // Keterangan boleh kosong, tidak perlu validasi
+            return true;
+        }
         private void btnSimpan_Click(object sender, EventArgs e)
         {
+            if (!IsFormValid())
+            {
+                return; 
+            }
             if (cmbWarga.SelectedItem == null || string.IsNullOrWhiteSpace(txtNamaKegiatan.Text))
             {
                 MessageBox.Show("Lengkapi data warga dan nama kegiatan!", "Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
